@@ -4,4 +4,4 @@ numpy
 transformers
 spacy
 FPDF
-torch==1.13.1
+torch==2.0.0

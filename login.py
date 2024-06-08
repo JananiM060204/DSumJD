@@ -66,7 +66,7 @@ def create_pdf(hospital_name, patient_name, age, gender, date_of_admission, disc
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     # Add the Maven Pro font
-    pdf.add_font("MavenPro-Regular", fname="Maven_Pro\MavenPro-VariableFont_wght.ttf", uni=True)
+    pdf.add_font("MavenPro-Regular", fname="static/Maven_Pro/MavenPro-VariableFont_wght.ttf", uni=True)
     pdf.set_font("MavenPro-Regular", size=12)
 
     # Add background image

@@ -70,7 +70,7 @@ def create_pdf(hospital_name, patient_name, age, gender, date_of_admission, disc
     pdf.set_font("MavenPro-Regular", size=12)
 
     # Add background image
-    pdf.image("Dbg.png", x=0, y=0, w=210, h=297, type='', link='')
+    pdf.image("static/Dbg.png", x=0, y=0, w=210, h=297, type='', link='')
 
     # Display hospital name in bold caps at the center
     pdf.set_font("Arial", style='B', size=16)

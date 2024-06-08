@@ -10,14 +10,15 @@ COPY requirements.txt .
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Download the spacy model directly during the build process
+RUN python -m spacy download en_core_web_sm
+
 # Copy the rest of the application code to the working directory
 COPY . .
-
-# Run the post-install script to download the spacy model
-RUN python post_install.py
 
 # Expose the port that Streamlit will run on
 EXPOSE 8501
 
 # Command to run the application
 CMD ["streamlit", "run", "login.py"]
+

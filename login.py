@@ -21,7 +21,7 @@ def load_spacy_model():
         import spacy
         return spacy.load('en_core_web_sm')
     except ImportError:
-        subprocess.run([sys.executable, "-m", "pip", "install", "spacy==3.1.3"])
+        subprocess.run([sys.executable, "-m", "pip", "install", "spacy==3.0.0"])
         subprocess.run([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
         import spacy
         return spacy.load('en_core_web_sm')

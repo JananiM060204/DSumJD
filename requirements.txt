@@ -3,7 +3,8 @@ pandas
 numpy
 transformers
 torch==2.0.0
-spacy==3.5.2
+spacy
 fpdf
 openpyxl
+en-core-web-sm
 

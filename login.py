@@ -5,8 +5,6 @@ import spacy
 from fpdf import FPDF
 import os
 import tempfile
-
-# Load the BART model and tokenizer only once
 @st.cache_resource
 def load_bart_model():
     tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
@@ -28,8 +26,7 @@ def load_spacy_model():
 
 nlp = load_spacy_model()
 
-# Load the EHR data from the Excel file
-@st.cache_data  # Cache the data to avoid loading it multiple times during the session
+@st.cache_data 
 def load_data():
     df = pd.read_excel("sample_ehr_data_Jan.xlsx")
     return df
@@ -65,14 +62,9 @@ def create_pdf(hospital_name, patient_name, age, gender, date_of_admission, disc
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
-    # Add the Maven Pro font
     pdf.add_font("MavenPro-Regular", fname="static/Maven_Pro/MavenPro-VariableFont_wght.ttf", uni=True)
     pdf.set_font("MavenPro-Regular", size=12)
-
-    # Add background image
     pdf.image("static/Dbg.png", x=0, y=0, w=210, h=297, type='', link='')
-
-    # Display hospital name in bold caps at the center
     pdf.set_font("Arial", style='B', size=16)
     pdf.cell(0, 10, hospital_name.upper(), ln=True, align="C")
 
@@ -99,11 +91,8 @@ def create_pdf(hospital_name, patient_name, age, gender, date_of_admission, disc
 
 def main():
     st.title("Patient Portal")
-
-    # Load the data when the app starts
     df = load_data()
 
-    # Initialize session state variables
     if 'login_successful' not in st.session_state:
         st.session_state.login_successful = False
     if 'discharge_summary' not in st.session_state:
@@ -113,7 +102,7 @@ def main():
     if 'patient_data' not in st.session_state:
         st.session_state.patient_data = None
 
-    # Sidebar for admin login
+    # Admin login
     st.sidebar.subheader("Admin Login")
     patient_id = st.sidebar.text_input("Enter Patient ID:")
     patient_name = st.sidebar.text_input("Enter Patient Name:")
@@ -139,22 +128,19 @@ def main():
         patient_id = st.session_state.patient_id
         patient_name = st.session_state.patient_name
         patient = st.session_state.patient_data
-
-        # Display detailed patient history in a formatted way
         st.subheader(f"Detailed History for Patient: {patient_name} (ID: {patient_id})")
         for index, row in patient.iterrows():
             st.write(f"Date of Admission: {row['Date_of_Admission']}")
             st.write(f"Admitting Doctor: {row['Handled Doctor']}")
             st.write(f"Discharge Date: {row['Date of Discharge']}")
-            # Display Case History in a formatted manner
+            # Display Case History 
             case_history = row['Case History'].split('\n')
             st.write("Case History:")
             for entry in case_history:
                 st.write(f"- {entry}")
 
             # Display Report Document if available
-            if not pd.isna(row['Report_Document']):
-                # Get the URL from the 'Report_Document' column in your DataFrame
+            if not pd.isna(row['Report_Document'])
                 pdf_url = row['Report_Document']
                 # Create a clickable and downloadable link
                 st.markdown(f"[View Reports]({pdf_url})")
@@ -166,11 +152,11 @@ def main():
                 st.session_state.discharge_summary = discharge_summary
                 
                 # Create a PDF and save it to a temporary file
-                hospital_name = "Hospital XYZ"  # Replace with actual data from your Excel sheet
-                age = patient['Age'].values[0]  # Example age from DataFrame
-                gender = patient['Gender'].values[0]  # Example gender from DataFrame
-                date_of_admission = patient['Date_of_Admission'].values[0]  # Example date from DataFrame
-                follow_up_treatment = "Follow-up appointments scheduled for next week."  # Example treatment, replace with actual data
+                hospital_name = "Hospital XYZ"  
+                age = patient['Age'].values[0]  
+                gender = patient['Gender'].values[0] 
+                date_of_admission = patient['Date_of_Admission'].values[0]  
+                follow_up_treatment = "Follow-up appointments scheduled for next week."
 
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
                     st.session_state.pdf_filename = tmp_file.name
